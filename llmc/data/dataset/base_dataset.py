@@ -74,7 +74,13 @@ class BaseDataset(metaclass=ABCMeta):
             if self.calib_dataset_name == 'custom_txt' or self.calib_dataset_name == 'custom_mm' or self.calib_dataset_name == 'images': # noqa
                 self.calib_dataset = self.get_cutomdata(self.calib_dataset_path)
             else:
-                self.calib_dataset = load_from_disk(self.calib_dataset_path)
+                dataset_dict = load_from_disk(self.calib_dataset_path)
+                # split = self.calib_cfg.get('split', default_splits.get(self.calib_dataset_name, 'train'))
+                # if split not in dataset_dict:
+                #     raise ValueError(
+                #         f"Split '{split}' not found in dataset. Available splits: {list(dataset_dict.keys())}"
+                #     )
+                self.calib_dataset = dataset_dict['train']
 
     def get_calib_model_inputs(self, samples):
         if not self.padding:

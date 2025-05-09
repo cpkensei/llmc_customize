@@ -80,7 +80,8 @@ def print_important_package_version():
 def get_modality(config):
     modalities = []
     modality_configs = []
-    compression_config = config.quant if 'quant' in config else config.sparse
+    # compression_config = config.quant if 'quant' in config else config.sparse
+    compression_config = config.sparse if 'sparse' in config else config.quant
     for modality in ['vision', 'language']:
         if modality in compression_config:
             compression_config[modality].modality = modality

@@ -2,11 +2,13 @@
 
 # export CUDA_VISIBLE_DEVICES=0,1
 
-llmc=/path/to/llmc
+llmc=/root/autodl-tmp/workdir/llmc
 export PYTHONPATH=$llmc:$PYTHONPATH
 
-task_name=awq_w_only
-config=${llmc}/configs/quantization/methods/Awq/awq_w_only.yml
+task_name=awq_w_only_4b_Meta-Llama-3-8B_0507
+# config=/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/Wanda/wanda.yml
+# config=/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/ShortGPT/shortgpt.yml
+config='/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/ShortGPT/shortgpt.yml'
 
 nnodes=1
 nproc_per_node=1

@@ -718,6 +718,7 @@ class VllmRealQuantLinear(nn.Module):
         else:
             scales_name = 'weight_scale'
 
+
         new_module = cls(weight, bias, scales, input_scale, need_pack, scales_name)
         new_module.in_features = module.in_features
         new_module.out_features = module.out_features
@@ -809,8 +810,8 @@ class LightllmRealQuantLinear(VllmRealQuantLinear):
 
 
 class SglRealQuantLinear(VllmRealQuantLinear):
-    def __init__(self, weight, bias, scales, input_scale, need_pack):
-        super().__init__(weight, bias, scales, input_scale, need_pack)
+    def __init__(self, weight, bias, scales, input_scale, need_pack, scales_name):
+        super().__init__(weight, bias, scales, input_scale, need_pack, scales_name)
 
     def __repr__(self):
         return (

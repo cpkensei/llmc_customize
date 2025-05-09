@@ -77,6 +77,7 @@ class BaseEval:
                 assert self.dataset == 'wikitext2'
                 testenc = testdata['text']
             elif self.dataset == 'wikitext2':
+                testdata = testdata['test']  # Select the 'test' split
                 testenc = self.tokenizer(
                     '\n\n'.join(testdata['text']), return_tensors='pt'
                 )

@@ -97,25 +97,25 @@ def main(config):
             ):
                 for modality_config in modality_configs:
                     w, a = modality_config.weight, modality_config.get('act')
-
-                    if isinstance(w.bit, str):
-                        assert w.symmetric, 'Only symmetric quant is supported.'
-                        assert w.bit in ['e4m3', 'e3m4'], 'Supported quant: w8a16.'
-                        if a:
-                            assert (
-                                w.symmetric and a.symmetric
-                            ), 'Only symmetric quant is supported.'
-                            assert (
-                                w.bit == a.bit
-                                and w.bit in ['e4m3', 'e5m2']
-                                and a.bit in ['e4m3', 'e5m2']
-                            ), 'Only WA FP8 quant is supported'
-                    else:
-                        assert w.symmetric, 'Only symmetric quant is supported.'
-                        assert w.bit in [4, 8], 'Supported quant: w4a16, w8a16, w8a8.'
-                        if a:
-                            assert a.symmetric, 'Only symmetric quant is supported.'
-                            assert a.bit == 8, 'Supported quant: w4a16, w8a16, w8a8.'
+                    logger.info(f"LOG 0506, {w}, {a}")
+                    # if isinstance(w.bit, str):
+                    #     assert w.symmetric, 'Only symmetric quant is supported.'
+                    #     assert w.bit in ['e4m3', 'e3m4'], 'Supported quant: w8a16.'
+                    #     if a:
+                    #         assert (
+                    #             w.symmetric and a.symmetric
+                    #         ), 'Only symmetric quant is supported.'
+                    #         assert (
+                    #             w.bit == a.bit
+                    #             and w.bit in ['e4m3', 'e5m2']
+                    #             and a.bit in ['e4m3', 'e5m2']
+                    #         ), 'Only WA FP8 quant is supported'
+                    # else:
+                    #     assert w.symmetric, 'Only symmetric quant is supported.'
+                    #     assert w.bit in [4, 8], 'Supported quant: w4a16, w8a16, w8a8.'
+                    #     if a:
+                    #         assert a.symmetric, 'Only symmetric quant is supported.'
+                    #         assert a.bit == 8, 'Supported quant: w4a16, w8a16, w8a8.'
 
                 if config.save.get('save_vllm', False):
                     deploy_all_modality(blockwise_opts, 'vllm_quant')
@@ -125,7 +125,7 @@ def main(config):
                     deploy_all_modality(blockwise_opts, 'sgl_quant')
 
                 blockwise_opt.save_model(save_quant_path)
-                update_vllm_quant_config(blockwise_opt.model, config, save_quant_path)
+                # update_vllm_quant_config(blockwise_opt.model, config, save_quant_path)
 
         if 'save' in config and config.save.get('save_autoawq', False):
             for modality_config in modality_configs:

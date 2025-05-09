@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 
-model_path = '/path/to/save_for_vllm_awq_w4/real_quant_model'
+model_path = '/root/autodl-tmp/model_save/llama3_8b_new/vllm_quant_model_smth'
 model = LLM(model_path)
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
