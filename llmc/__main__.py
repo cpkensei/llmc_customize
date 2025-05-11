@@ -128,13 +128,13 @@ def main(config):
                 # update_vllm_quant_config(blockwise_opt.model, config, save_quant_path)
 
         if 'save' in config and config.save.get('save_autoawq', False):
-            for modality_config in modality_configs:
-                assert (
-                    modality_config.weight.bit in [4] and 'act' not in modality_config
-                ), 'AutoAWQ supports only 4-bit weight-only quantization.'
-                assert (
-                    not modality_config.weight.symmetric
-                ), 'Only asymmetric quant is supported.'
+            # for modality_config in modality_configs:
+            #     assert (
+            #         modality_config.weight.bit in [4] and 'act' not in modality_config
+            #     ), 'AutoAWQ supports only 4-bit weight-only quantization.'
+            #     assert (
+            #         not modality_config.weight.symmetric
+            #     ), 'Only asymmetric quant is supported.'
 
             deploy_all_modality(blockwise_opts, 'autoawq_quant')
             blockwise_opt.save_model(save_quant_path)
@@ -241,6 +241,11 @@ if __name__ == '__main__':
             if config.save.get('save_fake', False):
                 save_fake_path = os.path.join(config.save.save_path, 'fake_quant_model')
                 mkdirs(save_fake_path)
+            # if config.save.get('save_huggingface', False):
+            #     save_huggingface_path = os.path.join(config.save.save_path, 'huggingface_model')
+            #     mkdirs(save_huggingface_path)
+            #     deploy_all_modality(blockwise_opts, 'huggingface_quant')  # 假设需要部署量化
+            #     blockwise_opt.save_model(save_huggingface_path)
 
     # Synchronize all processes after directory creation
     dist.barrier()

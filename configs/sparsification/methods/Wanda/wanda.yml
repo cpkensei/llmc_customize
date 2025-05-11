@@ -2,7 +2,7 @@ base:
     seed: &seed 42
 model:
     type: Llama
-    path: /root/autodl-tmp/workdir/llmc/base_models/meta-llama/Meta-Llama-3-8B/LLM-Research/Meta-Llama-3-8B
+    path: /root/autodl-tmp/base_models/meta-llama/Meta-Llama-3-8B/LLM-Research/Meta-Llama-3-8B
     torch_dtype: auto
 calib:
     name: wikitext2
@@ -32,6 +32,7 @@ sparse:
     sparsity_out: False
 save:
     # save_trans: False
-    save_sgl: True
+    # save_sgl: True
+    save_fake: True
     save_path: /root/autodl-tmp/model_save/llama3_8b_new
 

@@ -5,10 +5,10 @@
 llmc=/root/autodl-tmp/workdir/llmc
 export PYTHONPATH=$llmc:$PYTHONPATH
 
-task_name=awq_w_only_4b_Meta-Llama-3-8B_0507
+task_name=awq_w_only_4b_Meta-Llama-3-8B_0511
 # config=/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/Wanda/wanda.yml
 # config=/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/ShortGPT/shortgpt.yml
-config='/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/ShortGPT/shortgpt.yml'
+config='/root/autodl-tmp/workdir/llmc/configs/sparsification/methods/Wanda/wanda.yml'
 
 nnodes=1
 nproc_per_node=1
