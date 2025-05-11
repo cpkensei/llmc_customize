@@ -98,24 +98,24 @@ def main(config):
                 for modality_config in modality_configs:
                     w, a = modality_config.weight, modality_config.get('act')
                     logger.info(f"LOG 0506, {w}, {a}")
-                    # if isinstance(w.bit, str):
-                    #     assert w.symmetric, 'Only symmetric quant is supported.'
-                    #     assert w.bit in ['e4m3', 'e3m4'], 'Supported quant: w8a16.'
-                    #     if a:
-                    #         assert (
-                    #             w.symmetric and a.symmetric
-                    #         ), 'Only symmetric quant is supported.'
-                    #         assert (
-                    #             w.bit == a.bit
-                    #             and w.bit in ['e4m3', 'e5m2']
-                    #             and a.bit in ['e4m3', 'e5m2']
-                    #         ), 'Only WA FP8 quant is supported'
-                    # else:
-                    #     assert w.symmetric, 'Only symmetric quant is supported.'
-                    #     assert w.bit in [4, 8], 'Supported quant: w4a16, w8a16, w8a8.'
-                    #     if a:
-                    #         assert a.symmetric, 'Only symmetric quant is supported.'
-                    #         assert a.bit == 8, 'Supported quant: w4a16, w8a16, w8a8.'
+                    if isinstance(w.bit, str):
+                        assert w.symmetric, 'Only symmetric quant is supported.'
+                        assert w.bit in ['e4m3', 'e3m4'], 'Supported quant: w8a16.'
+                        if a:
+                            assert (
+                                w.symmetric and a.symmetric
+                            ), 'Only symmetric quant is supported.'
+                            assert (
+                                w.bit == a.bit
+                                and w.bit in ['e4m3', 'e5m2']
+                                and a.bit in ['e4m3', 'e5m2']
+                            ), 'Only WA FP8 quant is supported'
+                    else:
+                        assert w.symmetric, 'Only symmetric quant is supported.'
+                        assert w.bit in [4, 8], 'Supported quant: w4a16, w8a16, w8a8.'
+                        if a:
+                            assert a.symmetric, 'Only symmetric quant is supported.'
+                            assert a.bit == 8, 'Supported quant: w4a16, w8a16, w8a8.'
 
                 if config.save.get('save_vllm', False):
                     deploy_all_modality(blockwise_opts, 'vllm_quant')
@@ -125,31 +125,18 @@ def main(config):
                     deploy_all_modality(blockwise_opts, 'sgl_quant')
 
                 blockwise_opt.save_model(save_quant_path)
-                # update_vllm_quant_config(blockwise_opt.model, config, save_quant_path)
+                update_vllm_quant_config(blockwise_opt.model, config, save_quant_path)
 
         if 'save' in config and config.save.get('save_autoawq', False):
-            # for modality_config in modality_configs:
-            #     assert (
-            #         modality_config.weight.bit in [4] and 'act' not in modality_config
-            #     ), 'AutoAWQ supports only 4-bit weight-only quantization.'
-            #     assert (
-            #         not modality_config.weight.symmetric
-            #     ), 'Only asymmetric quant is supported.'
-
-            deploy_all_modality(blockwise_opts, 'autoawq_quant')
-            blockwise_opt.save_model(save_quant_path)
-            update_autoawq_quant_config(config, save_quant_path)
-
-        if 'save' in config and config.save.get('save_mlcllm', False):
             for modality_config in modality_configs:
                 assert (
                     modality_config.weight.bit in [4] and 'act' not in modality_config
-                ), 'MlcLLM supports only 4-bit weight-only quantization.'
+                ), 'AutoAWQ supports only 4-bit weight-only quantization.'
                 assert (
                     not modality_config.weight.symmetric
                 ), 'Only asymmetric quant is supported.'
 
-            deploy_all_modality(blockwise_opts, 'mlcllm_quant')
+            deploy_all_modality(blockwise_opts, 'autoawq_quant')
             blockwise_opt.save_model(save_quant_path)
             update_autoawq_quant_config(config, save_quant_path)
 
@@ -199,54 +186,25 @@ if __name__ == '__main__':
     seed_all(config.base.seed + int(os.environ['RANK']))
 
     # Ensure only the main process creates directories
+    actual_name = os.path.basename(config.model.path) + '_' + str(config.quant.weight.bit)
     if int(os.environ['RANK']) == 0:
         if 'save' in config:
-            if config.save.get('save_trans', False):
-                save_trans_path = os.path.join(
-                    config.save.save_path, 'transformed_model'
-                )
-                mkdirs(save_trans_path)
-            if config.save.get('save_trtllm', False):
-                save_trtllm_trans_path = os.path.join(
-                    config.save.save_path, 'trtllm_transformed_model'
-                )
-                mkdirs(save_trtllm_trans_path)
-                save_trtllm_engine_path = os.path.join(
-                    config.save.save_path, 'trtllm_engine'
-                )
-                mkdirs(save_trtllm_engine_path)
             if config.save.get('save_vllm', False):
                 save_quant_path = os.path.join(
-                    config.save.save_path, 'vllm_quant_model'
-                )
-                mkdirs(save_quant_path)
-            if config.save.get('save_lightllm', False):
-                save_quant_path = os.path.join(
-                    config.save.save_path, 'lightllm_quant_model'
+                    config.save.save_path, 'vllm_quant_model_' + actual_name
                 )
                 mkdirs(save_quant_path)
             if config.save.get('save_sgl', False):
-                save_quant_path = os.path.join(config.save.save_path, 'sgl_quant_model')
+                save_quant_path = os.path.join(config.save.save_path, 'sgl_quant_model_' + actual_name)
                 mkdirs(save_quant_path)
             if config.save.get('save_autoawq', False):
                 save_quant_path = os.path.join(
-                    config.save.save_path, 'autoawq_quant_model'
-                )
-                mkdirs(save_quant_path)
-            if config.save.get('save_mlcllm', False):
-                save_quant_path = os.path.join(
-                    config.save.save_path, 'mlcllm_quant_model'
+                    config.save.save_path, 'autoawq_quant_model_' + actual_name
                 )
                 mkdirs(save_quant_path)
             if config.save.get('save_fake', False):
-                save_fake_path = os.path.join(config.save.save_path, 'fake_quant_model')
+                save_fake_path = os.path.join(config.save.save_path, 'fake_quant_model_' + actual_name)
                 mkdirs(save_fake_path)
-            # if config.save.get('save_huggingface', False):
-            #     save_huggingface_path = os.path.join(config.save.save_path, 'huggingface_model')
-            #     mkdirs(save_huggingface_path)
-            #     deploy_all_modality(blockwise_opts, 'huggingface_quant')  # 假设需要部署量化
-            #     blockwise_opt.save_model(save_huggingface_path)
-
     # Synchronize all processes after directory creation
     dist.barrier()
 

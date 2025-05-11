@@ -1,8 +1,8 @@
 base:
     seed: &seed 0
 model:
-    type: Llama
-    path: /root/autodl-tmp/base_models/meta-llama/Meta-Llama-3-8B/LLM-Research/Meta-Llama-3-8B
+    type: Qwen2
+    path: /root/autodl-tmp/base_models/FreedomIntelligence/HuatuoGPT-o1-8B/FreedomIntelligence/HuatuoGPT-o1-8B
     tokenizer_mode: slow
     torch_dtype: auto
 calib:
@@ -42,4 +42,6 @@ quant:
     quant_out: True
 save:
     save_autoawq: True
-    save_path: /root/autodl-tmp/model_save/llama3_8b_new
+    # save_vllm: True
+    # save_sgl: True
+    save_path: /root/autodl-tmp/model_save/gptq
