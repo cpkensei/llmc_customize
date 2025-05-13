@@ -9,7 +9,7 @@ calib:
     download: False
     path: /root/autodl-tmp/dataset/wikitext_offline
     n_samples: 128
-    bs: -1
+    bs: 1
     seq_len: 512
     preproc: txt_general_preproc
     seed: *seed
@@ -17,13 +17,14 @@ eval:
     eval_pos: [transformed]
     name: [wikitext2]
     download: False
-    path: /root/autodl-tmp/dataset/wikitext_offline
     bs: 1
+    path: /root/autodl-tmp/dataset/wikitext_offline
     seq_len: 2048
 sparse:
-    method: Wanda
+    method: ShortGPT
     weight:
-        sparsity: 0.5
+        # sparsity: 0.5
+        n_prune_layers: 9
         # bit: 4
         # symmetric: true
         # need_pack: false
@@ -32,7 +33,6 @@ sparse:
     sparsity_out: False
 save:
     # save_trans: False
-    # save_sgl: True
     save_fake: True
-    save_path: /root/autodl-tmp/model_save/llama3_8b_new
+    save_path: /root/autodl-tmp/model_save/llama3_all
 

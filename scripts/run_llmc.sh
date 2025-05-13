@@ -5,8 +5,8 @@
 llmc=/root/autodl-tmp/workdir/llmc
 export PYTHONPATH=$llmc:$PYTHONPATH
 
-task_name=gptq_meditron_w4a16
-config='/root/autodl-tmp/workdir/llmc/configs/quantization/backend/autoawq/gptq_w4a16.yml'
+task_name=sglang_smoothquant_w8a8
+config='/root/autodl-tmp/workdir/llmc/config_llama_tmp/sglang_smoothquant_w8a8.yml'
 
 nnodes=1
 nproc_per_node=1

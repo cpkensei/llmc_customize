@@ -27,7 +27,7 @@ eval:
 quant:
     method: GPTQ
     weight:
-        bit: 8
+        bit: 4
         symmetric: False
         granularity: per_group
         group_size: 128
@@ -44,4 +44,4 @@ save:
     save_autoawq: True
     # save_vllm: True
     # save_sgl: True
-    save_path: /root/autodl-tmp/model_save/gptq
+    save_path: /root/autodl-tmp/model_save/llama3_all

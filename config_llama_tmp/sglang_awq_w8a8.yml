@@ -1,5 +1,5 @@
 base:
-    seed: &seed 0
+    seed: &seed 42
 model:
     type: Llama
     path: /root/autodl-tmp/base_models/meta-llama/Meta-Llama-3-8B/LLM-Research/Meta-Llama-3-8B
@@ -15,7 +15,7 @@ calib:
     preproc: txt_general_preproc
     seed: *seed
 eval:
-    eval_pos: [fake_quant]
+    eval_pos: []
     name: wikitext2
     download: False
     path: /root/autodl-tmp/dataset/wikitext_offline
@@ -25,23 +25,21 @@ eval:
     bs: 1
     inference_per_block: False
 quant:
-    method: GPTQ
+    method: Awq
     weight:
         bit: 8
-        symmetric: False
-        granularity: per_group
-        group_size: 128
-        # Available options: ['gemm_pack', 'gemv_pack']
-        pack_version: gemm_pack
+        symmetric: True
+        granularity: per_channel
+        group_size: -1
+    act:
+        bit: 8
+        symmetric: True
+        granularity: per_token
     special:
-        actorder: True
-        static_groups: True
-        percdamp: 0.01
-        blocksize: 128
-        true_sequential: True
+        trans: True
+        trans_version: v2
+        weight_clip: True
     quant_out: True
 save:
-    save_autoawq: True
-    # save_vllm: True
-    # save_sgl: True
-    save_path: /root/autodl-tmp/model_save/gptq
+    save_sgl: True
+    save_path: /root/autodl-tmp/model_save/llama3_all

@@ -186,7 +186,8 @@ if __name__ == '__main__':
     seed_all(config.base.seed + int(os.environ['RANK']))
 
     # Ensure only the main process creates directories
-    actual_name = os.path.basename(config.model.path) + '_' + str(config.quant.weight.bit)
+    # actual_name = os.path.basename(config.model.path) + '_' + str(config.quant.weight.bit)
+    actual_name = os.path.basename(args.config)
     if int(os.environ['RANK']) == 0:
         if 'save' in config:
             if config.save.get('save_vllm', False):

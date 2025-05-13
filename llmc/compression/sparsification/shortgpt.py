@@ -20,7 +20,7 @@ class ShortGPT(BaseBlockwiseSparsification):
     def __init__(self, model, sparsity_config, input, padding_mask, config):
         super().__init__(model, sparsity_config, input, padding_mask, config)
         self.importances = np.zeros(len(self.blocks))
-        self.n_prune_layers = 9
+        self.n_prune_layers = 5
 
     def block_opt(self, block):
         block = block.cuda()
